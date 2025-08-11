@@ -1,13 +1,10 @@
-package serviceCRUD;
+package entitiesHibernate;
 
-import entitiesHibernate.Client;
-import entitiesHibernate.Planet;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import storage.DatabaseInitService;
 
 import java.util.List;
 import java.util.Properties;
@@ -22,22 +19,22 @@ public class HibernateUtil {
         INSTANCE = new HibernateUtil();
     }
 
-    private HibernateUtil() {
+    public HibernateUtil() {
         try {
             Configuration configuration = new Configuration();
-            
+
             // Завантажуємо властивості з hibernate.properties
             Properties properties = new Properties();
             properties.load(HibernateUtil.class.getClassLoader()
                     .getResourceAsStream("hibernate.properties"));
-            
+
             configuration.setProperties(properties);
-            
-            // Для production використовуємо validate, щоб не перезаписувати дані
-            configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
+
+            // Додаємо додаткові налаштування
+            configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
             configuration.setProperty("hibernate.show_sql", "true");
             configuration.setProperty("hibernate.format_sql", "true");
-            
+
             sessionFactory = configuration
                     .addAnnotatedClass(Client.class)
                     .addAnnotatedClass(Planet.class)
@@ -53,15 +50,10 @@ public class HibernateUtil {
     }
 
     public void close() {
-        if (sessionFactory != null && !sessionFactory.isClosed()) {
-            sessionFactory.close();
-        }
+        sessionFactory.close();
     }
 
     public static void main(String[] args) {
-        // Ініціалізація БД за допомогою flyway
-        new DatabaseInitService().initDb();
-        
         HibernateUtil util = HibernateUtil.getInstance();
 
         // Приклад створення клієнта
