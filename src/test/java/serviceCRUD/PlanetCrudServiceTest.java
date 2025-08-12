@@ -1,5 +1,7 @@
 package serviceCRUD;
 
+import dao.PlanetDao;
+import dao.PlanetDaoImpl;
 import entitiesHibernate.HibernateUtil;
 import entitiesHibernate.Planet;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetCrudServiceTest {
     private PlanetCrudService planetService;
+    private HibernateUtil hibernateUtil;
 
     @BeforeEach
     void setUp() {
-        planetService = new PlanetCrudService(new HibernateUtil());
+        hibernateUtil = new HibernateUtil();
+        PlanetDao planetDao = new PlanetDaoImpl(hibernateUtil);
+        planetService = new PlanetCrudService(planetDao);
     }
 
     @Test

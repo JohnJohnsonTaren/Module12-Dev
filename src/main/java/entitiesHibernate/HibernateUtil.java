@@ -52,43 +52,4 @@ public class HibernateUtil {
     public void close() {
         sessionFactory.close();
     }
-
-    public static void main(String[] args) {
-        HibernateUtil util = HibernateUtil.getInstance();
-
-        // Приклад створення клієнта
-        Session session = util.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-            Client newClient = new Client();
-            newClient.setName("Test Client");
-            session.persist(newClient);
-            System.out.println("newClient = " + newClient);
-        transaction.commit();
-        session.close();
-
-        // Приклад читання всіх клієнтів
-        session = util.getSessionFactory().openSession();
-        List<Client> clients = session.createQuery("from Client", Client.class).list();
-        System.out.println("clients = " + clients);
-        session.close();
-
-        // Приклад створення планети
-        session = util.getSessionFactory().openSession();
-        transaction = session.beginTransaction();
-            Planet newPlanet = new Planet();
-            newPlanet.setId("MARS");
-            newPlanet.setName("Mars Planet");
-            session.persist(newPlanet);
-            System.out.println("newPlanet = " + newPlanet);
-        transaction.commit();
-        session.close();
-
-        // Приклад читання всіх планет
-        session = util.getSessionFactory().openSession();
-        List<Planet> planets = session.createQuery("from Planet", Planet.class).list();
-        System.out.println("planets = " + planets);
-        session.close();
-
-        util.close();
-    }
 }

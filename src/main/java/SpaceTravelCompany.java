@@ -16,18 +16,56 @@
 //          to_planet_id - ідентифікатор планети, куди летить пасажир
 
 import entitiesHibernate.HibernateUtil;
+import entitiesHibernate.Client;
+import entitiesHibernate.Planet;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import storage.DatabaseInitService;
+import java.util.List;
 
 public class SpaceTravelCompany {
     public static void main(String[] args) {
         new DatabaseInitService().initDb();
 
-        HibernateUtil hibernateUtil = HibernateUtil.getInstance();
+        HibernateUtil util = HibernateUtil.getInstance();
 
         System.out.println("SpaceTravel Company application started successfully!");
 
+        // Приклад створення клієнта
+        Session session = util.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+            Client newClient = new Client();
+            newClient.setName("Test Client");
+            session.persist(newClient);
+            System.out.println("newClient = " + newClient);
+        transaction.commit();
+        session.close();
+
+        // Приклад читання всіх клієнтів
+        session = util.getSessionFactory().openSession();
+        List<Client> clients = session.createQuery("from Client", Client.class).list();
+        System.out.println("clients = " + clients);
+        session.close();
+
+        // Приклад створення планети
+        session = util.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+            Planet newPlanet = new Planet();
+            newPlanet.setId("MARS");
+            newPlanet.setName("Mars Planet");
+            session.persist(newPlanet);
+            System.out.println("newPlanet = " + newPlanet);
+        transaction.commit();
+        session.close();
+
+        // Приклад читання всіх планет
+        session = util.getSessionFactory().openSession();
+        List<Planet> planets = session.createQuery("from Planet", Planet.class).list();
+        System.out.println("planets = " + planets);
+        session.close();
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            hibernateUtil.close();
+            util.close();
             System.out.println("Application shutdown complete.");
         }));
     }

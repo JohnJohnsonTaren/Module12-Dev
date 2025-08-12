@@ -24,4 +24,11 @@ public class Planet {
 
     @Column(name = "name", nullable = false, length = 500)
     private String name;
+
+    public void setId(String id) {
+        if (id != null && !id.matches("^[A-Z0-9]+$")) {
+            throw new IllegalArgumentException();
+        }
+        this.id = id;
+    }
 }

@@ -1,50 +1,66 @@
 package serviceCRUD;
 
-import entitiesHibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import java.util.List;
+import dao.ClientDao;
 import entitiesHibernate.Client;
+import java.util.List;
 
-public class ClientCrudService {
-    private final HibernateUtil hibernateUtil;
+public class ClientCrudService implements ClientService {
+    private final ClientDao clientDao;
 
-    public ClientCrudService (HibernateUtil hibernateUtil) {
-        this.hibernateUtil = hibernateUtil;
+    public ClientCrudService(ClientDao clientDao) {
+        this.clientDao = clientDao;
     }
 
+    @Override
     public void create(Client client) {
-        try (Session session = hibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(client);
-            transaction.commit();
-        }
+        // Бізнес-логіка валідації
+        validateClientName(client);
+        
+        clientDao.save(client);
     }
 
+    @Override
     public Client read(Long id) {
-        try (Session session = hibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Client.class, id);
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID клієнта повинен бути позитивним числом");
         }
+        
+        return clientDao.findById(id);
     }
 
+    @Override
     public void update(Client client) {
-        try (Session session = hibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.merge(client);
-            transaction.commit();
+        validateClientName(client);
+        
+        Client existingClient = clientDao.findById(client.getId());
+        if (existingClient == null) {
+            throw new IllegalArgumentException("Клієнт з ID " + client.getId() + " не знайдений");
         }
-    }
-    public void delete(Client client) {
-        try (Session session = hibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.remove(client);
-            transaction.commit();
-        }
-    }
-    public List<Client> listAll() {
-        try (Session session = hibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Client", Client.class).list();
-        }
+        
+        clientDao.update(client);
     }
 
+    @Override
+    public void delete(Client client) {
+        if (client == null || client.getId() == null) {
+            throw new IllegalArgumentException("Неможливо видалити клієнта з некоректними даними");
+        }
+        
+        clientDao.delete(client);
+    }
+
+    @Override
+    public List<Client> listAll() {
+        return clientDao.findAll();
+    }
+
+    private void validateClientName(Client client) {
+        if (client.getName() == null || client.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Ім'я клієнта не може бути порожнім");
+        }
+        
+        if (client.getName().length() < 3 || client.getName().length() > 200) {
+            throw new IllegalArgumentException("Ім'я клієнта повинно містити від 3 до 200 символів");
+        }
+    }
 }

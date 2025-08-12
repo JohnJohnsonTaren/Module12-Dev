@@ -1,5 +1,7 @@
 package serviceCRUD;
 
+import dao.ClientDao;
+import dao.ClientDaoImpl;
 import entitiesHibernate.Client;
 import entitiesHibernate.HibernateUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,8 @@ class ClientCrudServiceTest {
     @BeforeEach
     void setUp() {
         hibernateUtil = new HibernateUtil();
-        clientService = new ClientCrudService(hibernateUtil);
+        ClientDao ClientDao = new ClientDaoImpl(hibernateUtil);
+        clientService = new ClientCrudService(ClientDao);
         
         // Створюємо тестового клієнта для використання в тестах
         testClient = new Client();
