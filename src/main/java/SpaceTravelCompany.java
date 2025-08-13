@@ -15,7 +15,7 @@
 //          from_planet_id - ідентифікатор планети, звідки відправляється пасажир
 //          to_planet_id - ідентифікатор планети, куди летить пасажир
 
-import entitiesHibernate.HibernateUtil;
+import utilPackage.HibernateUtil;
 import entitiesHibernate.Client;
 import entitiesHibernate.Planet;
 import org.hibernate.Session;

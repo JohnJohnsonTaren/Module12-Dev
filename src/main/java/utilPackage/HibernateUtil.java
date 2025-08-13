@@ -1,12 +1,11 @@
-package entitiesHibernate;
+package utilPackage;
 
+import entitiesHibernate.Client;
+import entitiesHibernate.Planet;
 import lombok.Getter;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.List;
 import java.util.Properties;
 
 public class HibernateUtil {

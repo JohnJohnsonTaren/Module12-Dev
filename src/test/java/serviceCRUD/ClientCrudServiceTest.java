@@ -3,7 +3,7 @@ package serviceCRUD;
 import dao.ClientDao;
 import dao.ClientDaoImpl;
 import entitiesHibernate.Client;
-import entitiesHibernate.HibernateUtil;
+import utilPackage.HibernateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

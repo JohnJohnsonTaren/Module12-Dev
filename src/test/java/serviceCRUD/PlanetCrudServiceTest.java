@@ -2,7 +2,7 @@ package serviceCRUD;
 
 import dao.PlanetDao;
 import dao.PlanetDaoImpl;
-import entitiesHibernate.HibernateUtil;
+import utilPackage.HibernateUtil;
 import entitiesHibernate.Planet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
